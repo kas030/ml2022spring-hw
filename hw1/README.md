@@ -13,3 +13,8 @@ Results:
 
 - Private score: 1.08171
 - Public score: 1.07514
+
+Feature selection and regularization:
+
+- Private score: 0.92326
+- Public score: 0.89601

@@ -34,11 +34,13 @@ def save_pred(preds, filename):
 if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    state_dict = torch.load(
+    checkpoint = torch.load(
         './models/model.ckpt',
         map_location=device,
         weights_only=True
     )
+    state_dict = checkpoint['model_state_dict']
+    feature_indices = checkpoint['feature_indices'].cpu().numpy()
     input_dim = state_dict["layers.0.weight"].shape[1]
 
     model = MyModel(input_dim).to(device)
@@ -48,6 +50,7 @@ if __name__ == '__main__':
     print(f"Test_data size: {test_data.shape}")
 
     x_test, _ = select_feat(test_data, test=True, select_all=config['select_all'])
+    x_test = x_test[:, feature_indices]
     test_dataset = COVID19Dataset(x_test)
     test_loader = DataLoader(test_dataset, batch_size=config['batch_size'], shuffle=False, pin_memory=True)
 
